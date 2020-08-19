@@ -18,4 +18,5 @@ export interface ShutdownOptions {
 
 export interface loginContext {
     req: Request
+    res: Response
 }
