@@ -13,6 +13,7 @@ import { logger } from './utils/logManager'
 import { RegisterResolver } from './modules/user/Register'
 import { LoginResolver } from './modules/user/Login'
 import { MeResolver } from './modules/user/Me'
+import { ConfirmUserResolver } from './modules/user/ConfirmUser'
 import { redis } from './redis'
 import { expressContext } from './typings'
 import { gracefulShutdown } from "./utils/shutdown";
@@ -31,7 +32,7 @@ const main = async () => {
 
     // build graphql schemas
     const schema = await buildSchema({
-        resolvers: [RegisterResolver, LoginResolver, MeResolver],
+        resolvers: [RegisterResolver, LoginResolver, MeResolver, ConfirmUserResolver],
         authChecker: ({ context: { req }  }) => !!req.session.userId
     })
 
