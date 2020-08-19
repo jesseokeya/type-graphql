@@ -18,6 +18,7 @@ import { expressContext } from './typings'
 import { gracefulShutdown } from "./utils/shutdown";
 
 const main = async () => {
+    const start: number = Date.now();
     const sessionSecret: string = process.env.SESSION_SECRET || 'superSecureSecret'
     const RedisStore = connectRedis(session), PORT = process.env.PORT || 4000
 
@@ -74,8 +75,11 @@ const main = async () => {
 
     apolloServer.applyMiddleware({ app, cors: false })
 
+
+    const resolveTime = Date.now() - start;
+    // S.S.T is abbreviation for server startup time 
     const nodeServer = app.listen(PORT, () =>
-        logger.info(`🚀 Server running on port http://localhost:${PORT}${apolloServer.graphqlPath}`)
+        logger.info(`🚀 Server running on port http://localhost:${PORT}${apolloServer.graphqlPath}. S.S.T -> ${resolveTime}ms`)
     )
 
     gracefulShutdown({

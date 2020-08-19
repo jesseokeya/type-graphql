@@ -1,5 +1,5 @@
 import { Resolver, Mutation, Arg, Ctx, UseMiddleware } from 'type-graphql'
-import bcrypt from 'bcryptjs'
+import bcrypt from 'bcrypt'
 import { User } from '../../entity/User'
 import { loginContext } from '../../typings'
 import { ResolveTime } from '../middleware/resolveTime'
@@ -17,6 +17,7 @@ export class LoginResolver {
         if (!user) return null
 
         const valid = await bcrypt.compare(password, user.password)
+
         if (!valid) return null
 
         ctx.req.session!.userId = user.id 
