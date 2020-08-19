@@ -1,10 +1,12 @@
-import { Resolver, Mutation, Arg, Ctx } from 'type-graphql'
+import { Resolver, Mutation, Arg, Ctx, UseMiddleware } from 'type-graphql'
 import bcrypt from 'bcryptjs'
 import { User } from '../../entity/User'
 import { loginContext } from '../../typings'
+import { ResolveTime } from '../middleware/resolveTime'
 
 @Resolver()
 export class LoginResolver {
+    @UseMiddleware(ResolveTime)
     @Mutation(() => User, { nullable: true })
     async login(
         @Arg('email') email: string,

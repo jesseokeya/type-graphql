@@ -1,5 +1,6 @@
 import 'reflect-metadata'
 import Express from 'express'
+import { express as voyagerMiddleware } from 'graphql-voyager/middleware';
 import cors from 'cors'
 import session from 'express-session'
 import connectRedis from 'connect-redis'
@@ -29,7 +30,8 @@ const main = async () => {
 
     // build graphql schemas
     const schema = await buildSchema({
-        resolvers: [RegisterResolver, LoginResolver, MeResolver]
+        resolvers: [RegisterResolver, LoginResolver, MeResolver],
+        authChecker: ({ context: { req }  }) => !!req.session.userId
     })
 
     // start apollo graphql server
@@ -67,6 +69,8 @@ const main = async () => {
             }
         })
     )
+
+    app.use('/voyager', voyagerMiddleware({ endpointUrl: '/graphql' }));
 
     apolloServer.applyMiddleware({ app, cors: false })
 
