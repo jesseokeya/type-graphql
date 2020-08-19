@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "ts-node src/index.ts",
-    "dev": "nodemon --exec ts-node src/index.ts",
+    "dev": "ts-node-dev --respawn ts-node src/index.ts",
     "test": "jest"
   },
   "repository": {
@@ -28,10 +28,14 @@
   "dependencies": {
     "apollo-server-express": "^2.16.1",
     "bcryptjs": "^2.4.3",
+    "class-validator": "^0.12.2",
+    "connect-redis": "^5.0.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-session": "^1.17.1",
     "graphql": "^15.3.0",
+    "ioredis": "^4.17.3",
     "pg": "^8.3.2",
     "pino": "^6.5.1",
     "pino-pretty": "^4.1.0",
@@ -41,14 +45,18 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
+    "@types/connect-redis": "^0.0.14",
+    "@types/cors": "^2.8.7",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.7",
+    "@types/express-session": "^1.17.0",
     "@types/graphql": "^14.5.0",
     "@types/node": "^14.6.0",
     "@types/pg": "^7.14.4",
     "@types/pino": "^6.3.0",
     "nodemon": "^2.0.4",
     "ts-node": "^8.10.2",
+    "ts-node-dev": "^1.0.0-pre.58",
     "typescript": "^3.9.7"
   },
   "private": true

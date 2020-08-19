@@ -1,51 +1,85 @@
 import 'reflect-metadata'
-import * as Express from 'express'
-import * as cors from 'cors';
+import Express from 'express'
+import cors from 'cors'
+import session from 'express-session'
+import connectRedis from 'connect-redis'
+import { getConnection } from "typeorm";
 import { config } from 'dotenv'
 import { ApolloServer } from 'apollo-server-express'
 import { buildSchema } from 'type-graphql'
-import { createTypeormConn } from './createTypeormConn';
-import { logger } from './utils/logManager';
-import { RegisterResolver } from './modules/user/Register';
+import { createTypeormConn } from './createTypeormConn'
+import { logger } from './utils/logManager'
+import { RegisterResolver } from './modules/user/Register'
+import { LoginResolver } from './modules/user/Login'
+import { MeResolver } from './modules/user/Me'
+import { redis } from './redis'
+import { expressContext } from './typings'
+import { gracefulShutdown } from "./utils/shutdown";
 
 const main = async () => {
-    const PORT = process.env.PORT || 4000
+    const sessionSecret: string = process.env.SESSION_SECRET || 'superSecureSecret'
+    const RedisStore = connectRedis(session), PORT = process.env.PORT || 4000
 
     // load environment variables
     config()
 
     // create postgres database connection via typeorm
-    const conn = await createTypeormConn();
-    if (conn) await conn.runMigrations();
+    const conn = await createTypeormConn()
+    if (conn) await conn.runMigrations()
 
     // build graphql schemas
     const schema = await buildSchema({
-        resolvers: [RegisterResolver]
+        resolvers: [RegisterResolver, LoginResolver, MeResolver]
     })
 
     // start apollo graphql server
     const apolloServer = new ApolloServer({
-        schema
+        schema,
+        context: ({ req }: expressContext) => ({ req })
     })
 
     // start express server
     const app = Express()
 
     // register express middlewares
-    app.set('trust proxy', 1);
+    app.set('trust proxy', 1)
+
     app.use(
         cors({
             credentials: true,
-            // origin:
-            //     process.env.NODE_ENV === 'production'
-            //         ? 'https://www.codeponder.com'
-            //         : 'http://localhost:3000',
+            origin: 'http://localhost:3000'
         })
-    );
+    )
+
+    app.use(
+        session({
+            store: new RedisStore({
+                client: redis as any
+            }),
+            name: 'qid',
+            secret: sessionSecret,
+            resave: false,
+            saveUninitialized: false,
+            cookie: {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                maxAge: 1000 * 60 * 60 * 24 * 7 * 365 // 7 years
+            }
+        })
+    )
 
     apolloServer.applyMiddleware({ app, cors: false })
 
-    app.listen(PORT, () => logger.info(`🚀 Server running on port http://localhost:${PORT}${apolloServer.graphqlPath}`))
+    const nodeServer = app.listen(PORT, () =>
+        logger.info(`🚀 Server running on port http://localhost:${PORT}${apolloServer.graphqlPath}`)
+    )
+
+    gracefulShutdown({
+        db: getConnection(),
+        redisClient: redis,
+        logger,
+        nodeServer,
+    });
 }
 
 main()

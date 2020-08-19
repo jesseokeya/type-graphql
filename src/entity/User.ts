@@ -1,12 +1,18 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, Generated } from "typeorm";
 import { ObjectType, Field, ID, Root } from "type-graphql";
 
 @ObjectType()
 @Entity()
 export class User extends BaseEntity {
     @Field(() => ID)
+    // @PrimaryGeneratedColumn('uuid')
     @PrimaryGeneratedColumn()
     id: number;
+
+    @Field()
+    @Column()
+    @Generated("uuid")
+    uuid: string;
 
     @Field()
     @Column()
@@ -28,6 +34,7 @@ export class User extends BaseEntity {
     @Column()
     password: string;
 
+    @Field()
     @Column("bool", { default: false })
     confirmed: boolean;
 }
