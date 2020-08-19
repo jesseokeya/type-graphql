@@ -1,0 +1,47 @@
+{
+  "name": "type-graphql",
+  "version": "1.0.0",
+  "description": "Playing around with apollo graphql type-graphql typorm and redis",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jesseokeya/type-graphql.git"
+  },
+  "keywords": [
+    "apollo-server",
+    "type-graphql",
+    "typorm",
+    "and",
+    "redis"
+  ],
+  "author": "Jesse Okeya",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jesseokeya/type-graphql/issues"
+  },
+  "homepage": "https://github.com/jesseokeya/type-graphql#readme",
+  "dependencies": {
+    "apollo-server-express": "^2.16.1",
+    "bcryptjs": "^2.4.3",
+    "express": "^4.17.1",
+    "graphql": "^15.3.0",
+    "pg": "^8.3.2",
+    "reflect-metadata": "^0.1.13",
+    "type-graphql": "^1.0.0-rc.3",
+    "typeorm": "^0.2.25"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/express": "^4.17.7",
+    "@types/graphql": "^14.5.0",
+    "@types/node": "^14.6.0",
+    "@types/pg": "^7.14.4",
+    "nodemon": "^2.0.4",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.7"
+  }
+}
