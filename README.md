@@ -7,7 +7,7 @@ Playing around with apollo graphql type-graphql typorm postgres and redis
 - node
 
 ## Features
-### Graphql server - /graphql endpoint
+### Graphql server (type-graphql, typeorm and apollo) - /graphql endpoint
 ![graphql](./images/graphql.png)
 
 ### Schema Queries and Mutation visualizations using graphql-voyager - /voyager endpoint
