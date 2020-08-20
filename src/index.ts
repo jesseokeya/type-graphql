@@ -8,7 +8,6 @@ import { getConnection } from "typeorm";
 import { config } from 'dotenv'
 import { ApolloServer } from 'apollo-server-express'
 import { createAuthorsLoader } from './utils/authorsLoader';
-
 import { createTypeormConn } from './createTypeormConn'
 import { logger } from './utils/logManager'
 import { redis } from './redis'
