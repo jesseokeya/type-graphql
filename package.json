@@ -9,7 +9,10 @@
     "dev:debug": "nodemon -x ts-node-dev --respawn --debug --ignore-watch node_modules -- src/index.ts",
     "db:setup": "ts-node ./src/test-utils/setup.ts",
     "test": "npm run db:setup && jest",
-    "prod": "npm run build && cross-env NODE_ENV=production node ./dist/index.js",
+    "test:coverage": "npm run db:setup && jest --coverage --forceExit",
+    "prod": "npm run build && npm run dist",
+    "dist": "cross-env NODE_ENV=production node ./dist/index.js",
+    "coverage": "npm run test:coverage && lite-server --baseDir='./coverage/lcov-report'",
     "build": "tsc"
   },
   "repository": {
@@ -66,6 +69,7 @@
     "@types/pino": "^6.3.0",
     "@types/uuid": "^8.3.0",
     "jest": "^26.4.0",
+    "lite-server": "^2.5.4",
     "nodemon": "^2.0.4",
     "ts-jest": "^26.2.0",
     "ts-node": "^8.10.2",
