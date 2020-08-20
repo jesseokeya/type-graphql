@@ -104,7 +104,7 @@ npm run coverage
 npm run build
 ```
 
-## Running in production production
+## Running in production
 ```
 npm run prod
 ```
