@@ -8,6 +8,7 @@ import { MeResolver } from "../modules/user/Me";
 import { RegisterResolver } from "../modules/user/Register";
 import { CreateUserResolver, CreateProductResolver } from "../modules/user/CreateUser";
 import { ProfilePictureResolver } from "../modules/user/ProfilePicture";
+import { AuthorBookResolver } from '../modules/author-book/AuthorBookResolver'
 
 export const createSchema = () =>
     buildSchema({
@@ -21,7 +22,8 @@ export const createSchema = () =>
             RegisterResolver,
             CreateUserResolver,
             CreateProductResolver,
-            ProfilePictureResolver
+            ProfilePictureResolver,
+            AuthorBookResolver
         ],
         authChecker: ({ context: { req } }) => {
             return !!req.session.userId;

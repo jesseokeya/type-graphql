@@ -5,6 +5,8 @@ import { Logger } from "pino";
 import { Server } from "net";
 import { Stream } from "stream";
 
+import { createAuthorsLoader } from "../utils/authorsLoader";
+
 export type expressContext = {
     req: Request,
     res: Response
@@ -20,6 +22,7 @@ export interface ShutdownOptions {
 export interface MyContext {
     req: Request
     res: Response
+    authorsLoader: ReturnType<typeof createAuthorsLoader>;
 }
 
 export interface Upload {
