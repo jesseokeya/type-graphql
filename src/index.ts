@@ -7,7 +7,6 @@ import connectRedis from 'connect-redis'
 import { getConnection } from "typeorm";
 import { config } from 'dotenv'
 import { ApolloServer } from 'apollo-server-express'
-
 import { createTypeormConn } from './createTypeormConn'
 import { logger } from './utils/logManager'
 import { redis } from './redis'
@@ -45,8 +44,7 @@ const main = async () => {
     const app = Express()
 
     // register express middlewares
-    // app.set('trust proxy', 1)
-
+    app.set('trust proxy', 1)
     app.use(
         cors({
             credentials: true,

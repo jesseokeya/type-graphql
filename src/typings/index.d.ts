@@ -3,6 +3,7 @@ import { Connection } from "typeorm";
 import { Redis } from "ioredis";
 import { Logger } from "pino"; 
 import { Server } from "net";
+import { Stream } from "stream";
 
 export type expressContext = {
     req: Request,
@@ -19,4 +20,11 @@ export interface ShutdownOptions {
 export interface MyContext {
     req: Request
     res: Response
+}
+
+export interface Upload {
+    filename: string;
+    mimetype: string;
+    encoding: string;
+    createReadStream: () => Stream;
 }
