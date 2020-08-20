@@ -95,6 +95,8 @@ npm test
 ```
 npm run coverage
 ```
+![test](./images/test.png)
+
 ![codecov](./images/codecov.png)
 
 ![codecov1](./images/codecov-1.png)
