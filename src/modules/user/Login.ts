@@ -1,28 +1,37 @@
-import { Resolver, Mutation, Arg, Ctx, UseMiddleware } from 'type-graphql'
-import bcrypt from 'bcrypt'
-import { User } from '../../entity/User'
-import { loginContext } from '../../typings'
-import { ResolveTime } from '../middleware/resolveTime'
+import { Resolver, Mutation, Arg, Ctx, UseMiddleware } from "type-graphql";
+import bcrypt from "bcrypt";
+
+import { User } from "../../entity/User";
+import { MyContext } from "../../typings";
+import { ResolveTime } from "../middleware/resolveTime";
 
 @Resolver()
 export class LoginResolver {
     @UseMiddleware(ResolveTime)
     @Mutation(() => User, { nullable: true })
     async login(
-        @Arg('email') email: string,
-        @Arg('password') password: string,
-        @Ctx() ctx: loginContext
+        @Arg("email") email: string,
+        @Arg("password") password: string,
+        @Ctx() ctx: MyContext
     ): Promise<User | null> {
-        const user = await User.findOne({ where: { email } })
-        if (!user) return null
+        const user = await User.findOne({ where: { email } });
 
-        const valid = await bcrypt.compare(password, user.password)
+        if (!user) {
+            return null;
+        }
 
-        if (!valid || !user.confirmed) return null
+        const valid = await bcrypt.compare(password, user.password);
 
-        ctx.req.session!.userId = user.id 
+        if (!valid) {
+            return null;
+        }
 
-        return user
+        if (!user.confirmed) {
+            return null;
+        }
+
+        ctx.req.session!.userId = user.id;
+
+        return user;
     }
-
 }

@@ -1,15 +1,18 @@
-import { Resolver, Query, Ctx, UseMiddleware } from 'type-graphql'
-import { User } from '../../entity/User'
-import { loginContext } from '../../typings'
-import { ResolveTime } from '../middleware/resolveTime'
+import { Resolver, Query, Ctx, UseMiddleware } from "type-graphql";
+
+import { User } from "../../entity/User";
+import { MyContext } from "../../typings";
+import { ResolveTime } from "../middleware/resolveTime";
 
 @Resolver()
 export class MeResolver {
     @UseMiddleware(ResolveTime)
     @Query(() => User, { nullable: true })
-    async me(@Ctx() ctx: loginContext): Promise<User | undefined> {
-        const userId = ctx.req.session!.userId
-        if (!userId) return undefined
-        return User.findOne(userId)
+    async me(@Ctx() ctx: MyContext): Promise<User | undefined> {
+        if (!ctx.req.session!.userId) {
+            return undefined;
+        }
+
+        return User.findOne(ctx.req.session!.userId);
     }
 }

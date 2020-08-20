@@ -1,50 +1,58 @@
-import { Connection } from 'typeorm'
-import { testConn } from '../../../test-utils/testConn'
-import { gCall } from '../../../test-utils/gCall'
+import { Connection } from "typeorm";
+import faker from "faker";
 
-let conn: Connection
+import { testConn } from "../../../test-utils/testConn";
+import { gCall } from "../../../test-utils/gCall";
+import { User } from "../../../entity/User";
 
-beforeAll(async () => {
-    conn = await testConn()
-})
+let conn: Connection;
 
-afterAll(async () => {
-    conn.close()
-})
+beforeAll(async () => conn = await testConn());
+afterAll(async () => await conn.close());
 
 const registerMutation = `
-mutation {
-    register(
-        context: {
-            firstName: "Jesse"
-            lastName: "Okeya"
-            email: "Jesseokeya@xmail.com"
-            password: "12345678"
-        }
-    ) {
-        id
-        firstName
-        lastName
-        email
-        name
-    }
+mutation Register($data: RegisterInput!) {
+  register(
+    data: $data
+  ) {
+    id
+    firstName
+    lastName
+    email
+    name
+  }
 }
-`
+`;
 
-describe('Register', () => {
-    it('create user', async () => {
-        const result = await gCall({
+describe("Register", () => {
+    it("create user", async () => {
+        const user = {
+            firstName: faker.name.firstName(),
+            lastName: faker.name.lastName(),
+            email: faker.internet.email(),
+            password: faker.internet.password()
+        };
+
+        const response = await gCall({
             source: registerMutation,
             variableValues: {
-                context: {
-                    firstName: "Jesse",
-                    lastName: "Okeya",
-                    email: "Jesseokeya@cmail.com",
-                    password: "12345678"
+                data: user
+            }
+        });
+
+        expect(response).toMatchObject({
+            data: {
+                register: {
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    email: user.email
                 }
             }
-        })
-        // @ts-ignore
-        console.log(result.errors[0])
-    })
-})
+        });
+
+        const dbUser = await User.findOne({ where: { email: user.email } });
+        expect(dbUser).toBeDefined();
+        expect(dbUser!.confirmed).toBeFalsy();
+        expect(dbUser!.firstName).toBe(user.firstName);
+    });
+});

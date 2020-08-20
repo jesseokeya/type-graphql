@@ -16,7 +16,7 @@ export interface ShutdownOptions {
     nodeServer: Server;
 }
 
-export interface loginContext {
+export interface MyContext {
     req: Request
     res: Response
 }
