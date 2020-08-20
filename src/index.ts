@@ -7,12 +7,12 @@ import connectRedis from 'connect-redis'
 import { getConnection } from "typeorm";
 import { config } from 'dotenv'
 import { ApolloServer } from 'apollo-server-express'
-import { buildSchema } from 'type-graphql'
 import { createTypeormConn } from './createTypeormConn'
 import { logger } from './utils/logManager'
 import { redis } from './redis'
 import { expressContext } from './typings'
 import { gracefulShutdown } from "./utils/shutdown";
+import { createSchema } from './utils/createSchema';
 
 const main = async () => {
     const start: number = Date.now();
@@ -27,10 +27,7 @@ const main = async () => {
     if (conn) await conn.runMigrations()
 
     // build graphql schemas
-    const schema = await buildSchema({
-        resolvers: [__dirname + '/modules/**/*.ts'],
-        authChecker: ({ context: { req }  }) => !!req.session.userId
-    })
+    const schema = await createSchema()
 
     // start apollo graphql server
     const apolloServer = new ApolloServer({

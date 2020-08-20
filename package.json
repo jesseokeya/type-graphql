@@ -9,6 +9,7 @@
     "dev:debug": "nodemon -x ts-node-dev --respawn --debug --ignore-watch node_modules -- src/index.ts",
     "db:setup": "ts-node ./src/test-utils/setup.ts",
     "test": "npm run db:setup && jest",
+    "prod": "npm run build && cross-env NODE_ENV=production node ./dist/index.js",
     "build": "tsc"
   },
   "repository": {
