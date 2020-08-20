@@ -22,11 +22,10 @@
     {
         "name": "production",
         "type": "postgres",
-        "host": "db",
-        "port": 5432,
         "username": "postgres",
         "password": "postgres",
-        "database": "typegraphql",
+        "database": "typegraphql-example",
+        "port": 5432,
         "synchronize": false,
         "logging": false,
         "entities": [
